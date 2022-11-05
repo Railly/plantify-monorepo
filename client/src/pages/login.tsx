@@ -14,10 +14,16 @@ function Login() {
 
       const response = await api.login({ username, password });
       if (response.ok) {
-        window.localStorage.setItem("token", response.token);
-        window.localStorage.setItem("user", JSON.stringify(response.user));
-        toast.success("Ha iniciado sesión correctamente");
-        navigate("/admin-panel");
+        if (response.user.isAdmin) {
+          window.localStorage.setItem("token", response.token);
+          window.localStorage.setItem("user", JSON.stringify(response.user));
+          toast.success("Ha iniciado sesión correctamente");
+          navigate("/admin-panel");
+        } else {
+          toast.error(
+            "No tiene permisos para acceder a esta página, descarga nuestra app móvil"
+          );
+        }
       } else {
         toast.error(`Error: ${response.message}`);
       }
