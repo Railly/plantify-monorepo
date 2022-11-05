@@ -1,6 +1,7 @@
 import express from 'express'
 import { createDBConnection } from '../db'
 import routes from '../routes'
+import cors from 'cors'
 
 class Server {
   constructor () {
@@ -13,6 +14,7 @@ class Server {
 
   middlewares () {
     this.app.use(express.json())
+    this.app.use(cors())
   }
 
   routes () {
