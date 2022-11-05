@@ -1,9 +1,10 @@
 import express from 'express'
-// import usersRouter from './users'
+import userRouter from './user'
 import apiKeyRouter from './api-key'
+
 const router = express.Router()
 
-// router.use('/users', usersRouter)
+router.use('/user', userRouter)
 router.use('/key', apiKeyRouter)
 
 export default router
