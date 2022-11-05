@@ -9,7 +9,8 @@ export const loginUser = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: 'User not found'
+        ok: false,
+        message: 'User or password incorrect'
       })
     }
 
@@ -17,17 +18,23 @@ export const loginUser = async (req, res) => {
 
     if (!isPasswordValid) {
       return res.status(401).json({
-        message: 'Invalid credentials'
+        ok: false,
+        message: 'User or password incorrect'
       })
     }
 
+    const admins = [process.env.ADMIN_1, process.env.ADMIN_2]
+    const isAdmin = admins.includes(user.email)
     const token = generateToken(user)
 
     res.status(200).json({
       ok: true,
       message: 'User logged in successfully',
       token,
-      user
+      user: {
+        ...user,
+        isAdmin
+      }
     })
   } catch (err) {
     res.status(400).json({

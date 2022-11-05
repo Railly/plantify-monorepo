@@ -1,6 +1,10 @@
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import api from "../api";
 
 function Login() {
+  const navigate = useNavigate();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
@@ -10,10 +14,15 @@ function Login() {
 
       const response = await api.login({ username, password });
       if (response.ok) {
-        console.log("Login successful!");
+        window.localStorage.setItem("token", response.token);
+        window.localStorage.setItem("user", JSON.stringify(response.user));
+        toast.success("Ha iniciado sesión correctamente");
+        navigate("/admin-panel");
+      } else {
+        toast.error(`Error: ${response.message}`);
       }
-      console.log(response);
     } catch (error) {
+      toast.error("Ha ocurrido un error: " + error);
       console.error(error);
     }
   };
