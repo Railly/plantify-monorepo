@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-interface User {
+export interface User {
   _id: string;
   firstName: string;
   lastName: string;
@@ -21,7 +21,7 @@ interface LoginSuccessResponse extends BaseResponse {
   token: string;
 }
 
-interface LoginErrorResponse extends BaseResponse {
+interface ErrorResponse extends BaseResponse {
   ok: false;
 }
 
@@ -30,11 +30,16 @@ interface LoginPayload {
   password: string;
 }
 
+interface GetAllUsersSuccessResponse extends BaseResponse {
+  ok: true;
+  users: User[];
+}
+
 const login = async ({
   username,
   password,
-}: LoginPayload): Promise<LoginSuccessResponse | LoginErrorResponse> => {
-  const response = await fetch(`${API_URL}/user/login`, {
+}: LoginPayload): Promise<LoginSuccessResponse | ErrorResponse> => {
+  const response = await fetch(`${API_URL}/users/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -47,6 +52,19 @@ const login = async ({
   return response.json();
 };
 
+const getUsers = async (): Promise<
+  GetAllUsersSuccessResponse | ErrorResponse
+> => {
+  const response = await fetch(`${API_URL}/users`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response.json();
+};
+
 export default {
   login,
+  getUsers,
 };
