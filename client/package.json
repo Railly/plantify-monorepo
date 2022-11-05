@@ -5,8 +5,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "vite client",
-    "build": "tsc && vite build client"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "start": "vite preview"
   },
   "keywords": [],
   "author": "",
