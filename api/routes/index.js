@@ -4,7 +4,7 @@ import apiKeyRouter from './api-key'
 
 const router = express.Router()
 
-router.use('/user', userRouter)
+router.use('/users', userRouter)
 router.use('/key', apiKeyRouter)
 
 export default router
