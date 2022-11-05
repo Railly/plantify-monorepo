@@ -1,0 +1,33 @@
+{
+  "name": "plantid-back",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --experimental-modules --es-module-specifier-resolution=node api/index.js",
+    "start": "node --experimental-modules --es-module-specifier-resolution=node api/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "16.0.3",
+    "express": "4.18.2",
+    "express-validator": "^6.14.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "6.7.0",
+    "nodemon": "^2.0.20"
+  },
+  "devDependencies": {
+    "eslint": "^8.26.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.4.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^2.7.1"
+  }
+}
