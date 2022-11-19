@@ -13,7 +13,7 @@ export const registerUser = async (req, res) => {
 
   try {
     const savedUser = await user.save()
-    const token = generateToken(savedUser._id)
+    const token = generateToken(savedUser)
     res.status(201).json({
       ok: true,
       message: 'User created',

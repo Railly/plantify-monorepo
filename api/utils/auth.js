@@ -21,7 +21,7 @@ export const decryptPassword = async (password, encryptedPassword) => {
 export const generateToken = (user) => {
   return jwt.sign(
     {
-      id: user.id,
+      id: user._id,
       email: user.email,
       username: user.username,
       firstName: user.firstName,

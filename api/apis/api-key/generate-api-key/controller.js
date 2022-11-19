@@ -1,50 +1,58 @@
 import { chromium } from '@playwright/test'
-import ApiKey from '../../../models/ApiKey'
-import { getDeterministicFakeEmail, getDeterministicFakePassword, getDeterministicFakeUsername } from '../../../utils/api-key'
+import User from '../../../models/User'
+import { DESCRIPTION_120_CHAR } from '../../../utils/api-key'
 
 export const generateApiKey = async (req, res) => {
-  const user = {
-    _id: '60f1b9b0e3b2b8a0b0b0b0b0',
-    firstName: 'John',
-    lastName: 'Doe',
-    username: 'johndoe',
-    timesGeneratedApiKey: 0
-  }
-
+  const { username } = req.user
+  console.log({ username })
   try {
-    const username = getDeterministicFakeUsername(user)
-    const password = getDeterministicFakePassword(user)
-    const email = getDeterministicFakeEmail(user)
-
     const browser = await chromium.launch()
     const page = await browser.newPage()
-    await page.goto('https://admin.mlapi.ai/signup')
+
+    /** Finishing 'Create Account' process */
+    await page.goto('https://admin.mlapi.ai/login')
     await page.fill('input[name="username"]', username)
-    await page.screenshot({ path: './screenshots/username.png' })
-    await page.fill('input[name="password1"]', password)
-    await page.screenshot({ path: './screenshots/password1.png' })
-    await page.fill('input[name="password2"]', password)
-    await page.screenshot({ path: './screenshots/password2.png' })
-    await page.fill('input[name="email"]', email)
-    await page.screenshot({ path: './screenshots/email.png' })
-    await page.fill('input[name="first_name"]', user.firstName)
-    await page.screenshot({ path: './screenshots/first_name.png' })
-    await page.fill('input[name="last_name"]', user.lastName)
-    await page.screenshot({ path: './screenshots/last_name.png' })
-    await page.click('input[type="submit"]')
-    await page.screenshot({ path: './screenshots/submit.png' })
-    await page.waitForNavigation()
-    await page.screenshot({ path: `./screenshots/${username}.png` })
+    await page.screenshot({ path: './screenshots/request-api-key-1.png' })
+    await page.fill('input[name="password"]', 'mobile-2022')
+    await page.screenshot({ path: './screenshots/request-api-key-2.png' })
+    await page.click('button[type="submit"]')
+    await page.screenshot({ path: './screenshots/request-api-key-3.png' })
+    await page.waitForSelector('text=Create account')
     await page.screenshot({ path: `./screenshots/${username}-api-key.png` })
-    // const apiKeyValue = await page.textContent('input[name="key"]') || 'SUPER_F'
+    await page.fill('input[name="name"]', 'Prueba XD')
+    await page.click('input[id="id_expected_usage_0"]')
+    await page.click('input[id="id_category_1"]')
+    await page.fill('textarea[name="project_name_description"]', DESCRIPTION_120_CHAR)
+    await page.screenshot({ path: './screenshots/request-api-key-4.png' })
+    await page.click('input[type="submit"]')
+    await page.screenshot({ path: './screenshots/request-api-key-5.png' })
+
+    /** Actually generating the API Key */
+    const createButton = await page.waitForSelector('text=Create new API key')
+    await createButton.click()
+    await page.screenshot({ path: './screenshots/request-api-key-6.png' })
+    await page.click('input[id="systemRadio1"]')
+    await page.fill('input[name="name"]', 'Plantify')
+    await page.fill('input[name="credits"]', '100')
+    await page.click('button[type="submit"]')
+    await page.screenshot({ path: './screenshots/request-api-key-7.png' })
+
+    /** Retrieving API Key */
+    await page.waitForSelector('text=API key Plantify created.')
+    const getButton = await page.waitForSelector('text=Show key')
+    await getButton.click()
+    const apiKey = await page.getAttribute('input[id="copy-input"]', 'value')
     await browser.close()
 
-    const apiKey = new ApiKey({ key: 'SUPER_F', username: user.username })
+    await User.updateOne({ username }, {
+      $set: {
+        apiKey
+      }
+    }).exec()
 
-    await apiKey.save()
     res.status(200).json({
       ok: true,
-      message: 'API key generated successfully',
+      message: 'API generated successfully',
       apiKey
     })
   } catch (err) {

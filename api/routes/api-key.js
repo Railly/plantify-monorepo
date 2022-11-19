@@ -4,6 +4,7 @@ import { apiKeys } from '../apis/api-key'
 
 const router = Router()
 
+router.get('/request', ...apiKeys.request)
 router.get('/generate', ...apiKeys.generate)
 
 export default router

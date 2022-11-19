@@ -22,9 +22,9 @@ const UserSchema = new Schema({
     type: String,
     required: [true, 'Please provide a password.']
   },
-  timesGeneratedApiKey: {
-    type: Number,
-    default: 0
+  apiKey: {
+    type: String,
+    default: null
   },
   createdAt: {
     type: Date,

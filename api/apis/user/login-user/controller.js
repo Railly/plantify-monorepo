@@ -32,7 +32,7 @@ export const loginUser = async (req, res) => {
       message: 'User logged in successfully',
       token,
       user: {
-        ...user,
+        ...user.toJSON(),
         isAdmin
       }
     })
