@@ -1,9 +1,4 @@
-#npm
-node_modules
-
-# env
-*/*.env
-*/dist
+node_modules/
 /test-results/
 /playwright-report/
 /playwright/.cache/
