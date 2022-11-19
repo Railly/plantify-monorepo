@@ -6,10 +6,13 @@ const ApiKeySchema = new Schema({
     required: [true, 'Please provide an API key.'],
     unique: true
   },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'Please provide a user.']
+  username: {
+    type: String,
+    required: [true, 'Please provide a username.']
+  },
+  isRevoked: {
+    type: Boolean,
+    default: false
   },
   createdAt: {
     type: Date,
