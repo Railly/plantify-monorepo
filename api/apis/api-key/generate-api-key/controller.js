@@ -4,7 +4,6 @@ import { DESCRIPTION_120_CHAR } from '../../../utils/api-key'
 
 export const generateApiKey = async (req, res) => {
   const { username } = req.user
-  console.log({ username })
   try {
     const browser = await chromium.launch()
     const page = await browser.newPage()
@@ -46,7 +45,8 @@ export const generateApiKey = async (req, res) => {
 
     await User.updateOne({ username }, {
       $set: {
-        apiKey
+        apiKey,
+        remainingCredits: 100
       }
     }).exec()
 

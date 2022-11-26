@@ -26,6 +26,10 @@ const UserSchema = new Schema({
     type: String,
     default: null
   },
+  remainingCredits: {
+    type: Number,
+    default: 0
+  },
   createdAt: {
     type: Date,
     default: Date.now

@@ -3,7 +3,7 @@ import { generateApiKeyValidator } from './generate-api-key/validators'
 import { requestApiKey } from './request-api-key/controller'
 import { requestApiKeyValidator } from './request-api-key/validators'
 
-export const apiKeys = {
+export const apiKeyRoutes = {
   request: [requestApiKeyValidator, requestApiKey],
   generate: [generateApiKeyValidator, generateApiKey]
 }

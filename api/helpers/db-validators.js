@@ -9,7 +9,6 @@ export const uniqueEmail = async (email) => {
 
 export const uniqueUsername = async (username) => {
   const user = await User.findOne({ username }).exec()
-  console.log({ user })
   if (user) {
     throw new Error('Username is already taken')
   }

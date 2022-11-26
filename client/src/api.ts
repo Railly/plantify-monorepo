@@ -8,6 +8,8 @@ export interface User {
   email: string;
   createdAt: string;
   isAdmin: boolean;
+  apiKey: string;
+  remainingCredits: number;
 }
 
 interface BaseResponse {

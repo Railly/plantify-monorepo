@@ -30,7 +30,6 @@ function AdminPanel() {
     };
 
     const isAuth = verifyToken();
-    console.log({ isAuth });
 
     if (!isAuth) {
       navigate("/");
@@ -39,17 +38,32 @@ function AdminPanel() {
     }
   }, []);
 
+  const getRowStyles = (user: User, index: number) => {
+    if (user.remainingCredits > 0) {
+      if (index % 2 === 0) {
+        return "bg-[#677d52] text-white border-white border";
+      }
+      return "bg-[#5C7A3F] text-white border-white border";
+    }
+    if (index % 2 === 0) {
+      return "bg-white border";
+    }
+    return "bg-gray-100";
+  };
+
   return (
-    <main className="min-h-screen w-screen gap-4 grid place-content-center p-4">
+    <main className="min-h-screen gap-4 grid place-content-center py-8">
       <div className="flex flex-col items-center gap-4">
-        <h1 className="font-bold text-2xl text-[#5C7A3F] text-center">
-          Panel de Administración de Plantify
-        </h1>
-        <img
-          src="/plantify-logo.webp"
-          alt="Plantify Logo"
-          className="w-32 h-32"
-        />
+        <div className="flex items-center gap-4">
+          <img
+            src="/plantify-logo.webp"
+            alt="Plantify Logo"
+            className="w-12 h-12"
+          />
+          <h1 className="font-bold text-2xl text-[#5C7A3F] text-center">
+            Panel de Administración de Plantify
+          </h1>
+        </div>
         <div className="flex flex-col gap-4">
           <h2 className="font-bold text-xl text-[#5C7A3F] text-center">
             Usuarios
@@ -59,19 +73,16 @@ function AdminPanel() {
               <thead className="text-xs uppercase bg-[#5C7A3F] text-white">
                 <tr>
                   <th scope="col" className="py-3 px-6">
-                    ID
-                  </th>
-                  <th scope="col" className="py-3 px-6">
                     Usuario
                   </th>
                   <th scope="col" className="py-3 px-6">
-                    Nombre
-                  </th>
-                  <th scope="col" className="py-3 px-6">
-                    Apellido
+                    Nombre completo
                   </th>
                   <th scope="col" className="py-3 px-6">
                     Email
+                  </th>
+                  <th scope="col" className="py-3 px-6">
+                    Créditos
                   </th>
                   <th scope="col" className="py-3 px-6">
                     Fecha de creación
@@ -114,27 +125,27 @@ function AdminPanel() {
                   </tr>
                 ) : (
                   users.map((user, index) => (
-                    <tr
-                      className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
-                    >
+                    <tr className={getRowStyles(user, index)}>
                       <th
                         scope="row"
-                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
+                        className="py-4 px-6 font-semibold whitespace-nowrap"
                       >
-                        {user._id}
+                        {user.username}
                       </th>
-                      <td className="py-4 px-6">{user.username}</td>
-                      <td className="py-4 px-6">{user.firstName}</td>
-                      <td className="py-4 px-6">{user.lastName}</td>
+                      <td className="py-4 px-6">
+                        {user.firstName} {user.lastName}
+                      </td>
                       <td className="py-4 px-6">{user.email}</td>
+                      <td className="py-4 px-6 text-center">
+                        {user.remainingCredits ?? 0}
+                      </td>
                       <td className="py-4 px-6">
                         {new Date(user.createdAt).toLocaleDateString("es-ES", {
                           year: "numeric",
-                          month: "long",
+                          month: "short",
                           day: "numeric",
                           hour: "numeric",
                           minute: "numeric",
-                          second: "numeric",
                         })}
                       </td>
                     </tr>

@@ -1,10 +1,9 @@
 import { Router } from 'express'
-import { apiKeys } from '../apis/api-key'
-// import { body } from 'express-validator'
+import { apiKeyRoutes } from '../apis/api-key'
 
 const router = Router()
 
-router.get('/request', ...apiKeys.request)
-router.get('/generate', ...apiKeys.generate)
+router.get('/request', ...apiKeyRoutes.request)
+router.get('/generate', ...apiKeyRoutes.generate)
 
 export default router
