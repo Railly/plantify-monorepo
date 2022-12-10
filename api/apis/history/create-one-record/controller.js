@@ -2,11 +2,12 @@ import History from '../../../models/History'
 
 export const createOneHistoryRecord = async (req, res) => {
   const { user } = req
+  const { content } = req.body
 
   try {
     const history = await History.create({
       user: user._id,
-      content: req.body.content
+      content
     })
 
     res.status(200).json({

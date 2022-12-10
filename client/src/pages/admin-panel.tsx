@@ -8,27 +8,27 @@ function AdminPanel() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const response = await api.getUsers();
-        if (response.ok) {
-          setUsers(response.users);
-        } else {
-          toast.error(`Error: ${response.message}`);
-        }
-      } catch (error) {
-        toast.error("Error: Failed to fetch users");
-        console.error(error);
-      } finally {
-        setLoading(false);
+  const getUsers = async () => {
+    try {
+      const response = await api.getUsers();
+      if (response.ok) {
+        setUsers(response.users);
+      } else {
+        toast.error(`Error: ${response.message}`);
       }
-    };
-    const verifyToken = () => {
-      const token = window.localStorage.getItem("token");
-      return Boolean(token);
-    };
+    } catch (error) {
+      toast.error("Error: Failed to fetch users");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const verifyToken = () => {
+    const token = window.localStorage.getItem("token");
+    return Boolean(token);
+  };
 
+  useEffect(() => {
     const isAuth = verifyToken();
 
     if (!isAuth) {
@@ -49,6 +49,21 @@ function AdminPanel() {
       return "bg-white border";
     }
     return "bg-gray-100";
+  };
+
+  const handleDeleteUser = async (id: string) => {
+    try {
+      const response = await api.deleteUser(id);
+      if (response.ok) {
+        toast.success("User deleted successfully");
+        getUsers();
+      } else {
+        toast.error(`Error: ${response.message}`);
+      }
+    } catch (error) {
+      toast.error("Error: Failed to delete user");
+      console.error(error);
+    }
   };
 
   return (
@@ -86,6 +101,9 @@ function AdminPanel() {
                   </th>
                   <th scope="col" className="py-3 px-6">
                     Fecha de creación
+                  </th>
+                  <th scope="col" className="py-3 px-6">
+                    Acciones
                   </th>
                 </tr>
               </thead>
@@ -125,7 +143,12 @@ function AdminPanel() {
                   </tr>
                 ) : (
                   users.map((user, index) => (
-                    <tr className={getRowStyles(user, index)}>
+                    <tr
+                      className={`${getRowStyles(
+                        user,
+                        index
+                      )} hover:bg-gray-200 cursor-pointer`}
+                    >
                       <th
                         scope="row"
                         className="py-4 px-6 font-semibold whitespace-nowrap"
@@ -147,6 +170,51 @@ function AdminPanel() {
                           hour: "numeric",
                           minute: "numeric",
                         })}
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-4">
+                          <button
+                            className="bg-rose-500 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => handleDeleteUser(user._id)}
+                          >
+                            <svg
+                              stroke="currentColor"
+                              fill="currentColor"
+                              strokeWidth="0"
+                              viewBox="0 0 16 16"
+                              height="1em"
+                              width="1em"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"></path>
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => navigate(`/history/${user._id}`)}
+                            className="bg-green-500 text-white font-bold py-2 px-4 rounded"
+                          >
+                            <svg
+                              stroke="currentColor"
+                              fill="none"
+                              strokeWidth="2"
+                              viewBox="0 0 24 24"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              height="1em"
+                              width="1em"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <desc></desc>
+                              <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                              ></path>
+                              <polyline points="12 8 12 12 14 14"></polyline>
+                              <path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path>
+                            </svg>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))

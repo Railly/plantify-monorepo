@@ -37,6 +37,17 @@ interface GetAllUsersSuccessResponse extends BaseResponse {
   users: User[];
 }
 
+export interface History {
+  _id: string;
+  content: string;
+  createdAt: string;
+}
+
+interface GetHistorySuccessResponse extends BaseResponse {
+  ok: true;
+  history: History[];
+}
+
 const login = async ({
   username,
   password,
@@ -66,7 +77,42 @@ const getUsers = async (): Promise<
   return response.json();
 };
 
+const getToken = () => {
+  const token = window.localStorage.getItem("token");
+  if (!token) {
+    console.error("No token found");
+    return null;
+  }
+  return token;
+};
+
+const getHistoryByUser = async (
+  userId: string | undefined
+): Promise<GetHistorySuccessResponse | ErrorResponse> => {
+  const response = await fetch(`${API_URL}/history/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+  return response.json();
+};
+
+const deleteUser = async (userId: string): Promise<ErrorResponse> => {
+  const response = await fetch(`${API_URL}/users/${userId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+  return response.json();
+};
+
 export default {
   login,
+  deleteUser,
   getUsers,
+  getHistoryByUser,
 };
