@@ -14,6 +14,7 @@ function App() {
         <Route path="/history/:id" element={<History />} />
       </Routes>
       <ToastContainer />
+      <></>
     </>
   );
 }

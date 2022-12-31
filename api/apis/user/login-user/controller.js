@@ -16,6 +16,7 @@ export const loginUser = async (req, res) => {
 
     const isPasswordValid = await decryptPassword(password, user.password)
 
+    console.log({ isPasswordValid })
     if (!isPasswordValid) {
       return res.status(401).json({
         ok: false,
